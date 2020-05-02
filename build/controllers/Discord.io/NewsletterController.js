@@ -15,18 +15,18 @@ class NewsletterController {
             const $ = cheerio_1.default.load(html);
             const newsletterArray = $('.view-mode-todas_as_noticias');
             newsletterArray.each(async function () {
-                const title = $(this).find('.even > h4 > a');
-                const img = $(this).find('.even > a > img').attr('src');
-                const description = $(this).find('.linha-fina-noticia-destaque > div > div').text();
-                const getRow = await Newsletter_1.default.findOne({ title: title.text() });
-                if (!getRow) {
-                    try {
+                try {
+                    const title = $(this).find('.even > h4 > a');
+                    const img = $(this).find('.even > a > img').attr('src');
+                    const description = $(this).find('.linha-fina-noticia-destaque > div > div').text();
+                    const getRow = await Newsletter_1.default.findOne({ title: title.text() });
+                    if (!getRow) {
                         await ufuNews.send('**' + title.text() + '**' + '\n' + description + '\n' + link + title.attr('href'), { files: [img] });
                         await Newsletter_1.default.create({ title: title.text(), img: img, description: description });
                     }
-                    catch (error) {
-                        console.log(error);
-                    }
+                }
+                catch (error) {
+                    console.log(error);
                 }
             });
             return 'OK';
