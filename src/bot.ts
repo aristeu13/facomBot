@@ -16,7 +16,7 @@ class Bot {
       this.welcome()
       this.selectMethod()
       this.onReaction()
-      // this.repeatMethod()
+      this.repeatMethod()
     }
 
     private welcome (): void {
