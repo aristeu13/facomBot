@@ -1,6 +1,7 @@
-import { Client, TextChannel } from 'discord.js'
+import { Client, TextChannel, Message } from 'discord.js'
 import MoneyController from './controllers/Discord.io/MoneyController'
 import NewsletterController from './controllers/Discord.io/NewsletterController'
+import TeamsController from './controllers/Discord.io/TeamsControllers'
 
 class Bot {
     public client: Client
@@ -14,7 +15,8 @@ class Bot {
 
       this.welcome()
       this.selectMethod()
-      this.repeatMethod()
+      this.onReaction()
+      // this.repeatMethod()
     }
 
     private welcome (): void {
@@ -34,20 +36,47 @@ class Bot {
     private selectMethod (): void {
       this.client.on('message', async (msg) => {
         this.message = msg.content.toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        const answer = await this.switchController()
-        if (answer) msg.reply(answer)
+        await this.switchController(msg)
+      })
+    }
+
+    private onReaction (): void {
+      this.client.on('messageReactionAdd', async (reaction, user) => {
+        if (reaction.partial) {
+          try {
+            await reaction.fetch()
+          } catch (error) {
+            console.log('Something went wrong when fetching the message: ', error)
+          }
+        }
+        if (['🥉', '🥈', '🥇', '🏆'].includes(reaction.emoji.name)) {
+          TeamsController.addUser(reaction, user)
+        }
+        if (['🏁'].includes(reaction.emoji.name)) {
+          TeamsController.selected(reaction, user)
+        }
       })
     }
 
     // add new commands in switch
-    private async switchController (): Promise<string | undefined> {
+    private async switchController (msg: Message): Promise<void> {
       switch (this.message) {
         case 'dolar?': {
           const dolar = await MoneyController.index()
-          return dolar || ''
+          if (dolar) msg.reply(dolar)
+          break
         }
         case 'provas?': {
-          return 'Em desenvolvimento'
+          msg.reply('Em desenvolvimento')
+          break
+        }
+        case 'times?': {
+          TeamsController.save(msg)
+          break
+        }
+        case 'teste?': {
+          TeamsController.teste(msg)
+          break
         }
       }
     }

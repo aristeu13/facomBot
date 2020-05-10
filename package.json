@@ -15,6 +15,7 @@
     "@types/discord-rpc": "^3.0.3",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.6",
+    "@types/js-combinatorics": "^0.5.31",
     "@types/mongoose": "^5.7.14",
     "@types/ws": "^7.2.4",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
@@ -39,6 +40,7 @@
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "js-combinatorics": "^0.5.5",
     "mongoose": "^5.9.11"
   }
 }
