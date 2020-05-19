@@ -20,7 +20,8 @@ class NewsletterController {
           const getRow = await Newsletter.findOne({ title: title.text() })
 
           if (!getRow) {
-            await ufuNews.send('**' + title.text() + '**' + '\n' + description + '\n' + link + title.attr('href'), { files: [img] })
+            if(img) await ufuNews.send('**' + title.text() + '**' + '\n' + description + '\n' + link + title.attr('href'), { files: [img] })
+            else await ufuNews.send('**' + title.text() + '**' + '\n' + description + '\n' + link + title.attr('href'))
             await Newsletter.create({ title: title.text(), img: img, description: description })
           }
         } catch (error) {
